@@ -1,0 +1,40 @@
+import pygame
+import random
+
+pygame.init()
+width, height = 800, 600
+screen = pygame.display.set_mode((width, height))
+clock = pygame.time.Clock()
+
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+
+snowflakes = [[random.randint(0, width), random.randint(0, height)] for _ in range(100)]
+
+ground = [0] * width
+
+running = True
+while running:
+    screen.fill(BLACK)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    for flake in snowflakes:
+        flake[1] += 1 
+        
+        if flake[1] >= height - ground[flake[0]]:
+            ground[flake[0]] += 2 
+            flake[1] = 0 
+            flake[0] = random.randint(0, width)
+
+        pygame.draw.circle(screen, WHITE, flake, 2)
+
+    for x in range(width):
+        if ground[x] > 0:
+            pygame.draw.line(screen, WHITE, (x, height), (x, height - ground[x]))
+
+    pygame.display.flip()
+    clock.tick(30)
+
+pygame.quit()
